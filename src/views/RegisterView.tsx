@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useForm  } from "react-hook-form"
 import FormError from '../components/FormError'
 import type {RegisterForm} from '../interfaces/index'
-import axios from "axios";
+import api from "../lib/axios";
 import { toast } from "sonner";
 
 export default function App() {
@@ -22,14 +22,14 @@ export default function App() {
   const onSubmit = async (formData:RegisterForm) => {
     //console.log(data)
     try {
-      const {data} = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, formData);
+      const {data} = await api.post(`/api/auth/register`, formData);
 
       console.log(data)
       reset();
       toast.success(data.msg)//endpoint response
 
-    } catch (error) {
-      console.log(error)
+    } catch (error:any) {
+      toast.error(error.response.data.msg);
     }
   }
 
