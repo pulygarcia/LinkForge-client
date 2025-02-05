@@ -3,6 +3,7 @@ import { useForm  } from "react-hook-form"
 import FormError from '../components/FormError'
 import api from "../lib/axios";
 import { toast } from "sonner";
+import type { LoginForm } from "../types";
 
 export default function App() {
   const initialValues = {
@@ -12,10 +13,11 @@ export default function App() {
 
   const {register, handleSubmit, formState:{errors}, reset } = useForm({defaultValues:initialValues});
 
-  const onSubmit = async (formData:any) => {
+  const onSubmit = async (formData:LoginForm) => {
     //console.log(data)
     try {
       const {data} = await api.post(`/api/auth/login`, formData);
+      localStorage.setItem('USER_TOKEN', data.token);
       //console.log(data);
       reset();
       toast.success(data.msg); //endpoint response

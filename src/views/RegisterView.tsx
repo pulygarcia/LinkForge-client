@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useForm  } from "react-hook-form"
 import FormError from '../components/FormError'
-import type {RegisterForm} from '../interfaces/index'
+import type {RegisterForm} from '../types/index'
 import api from "../lib/axios";
 import { toast } from "sonner";
 
