@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm  } from "react-hook-form"
 import FormError from '../components/FormError'
 import type {RegisterForm} from '../types/index'
@@ -6,6 +6,7 @@ import api from "../lib/axios";
 import { toast } from "sonner";
 
 export default function App() {
+  const navigate = useNavigate();
   
   const initialValues:RegisterForm = {
     name: '',
@@ -27,6 +28,10 @@ export default function App() {
       console.log(data)
       reset();
       toast.success(data.msg)//endpoint response
+
+      setTimeout(() => {
+        navigate("/auth/login"); 
+      }, 2000); 
 
     } catch (error:any) {
       toast.error(error.response.data.msg);

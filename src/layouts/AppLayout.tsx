@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
 import NavigationTabs from "../components/NavigationTabs";
 import { useQuery } from '@tanstack/react-query'
@@ -6,16 +6,24 @@ import { getUser } from "../api/LinkForgeApi";
 
 export default function AppLayout() {
 
-    const {data} = useQuery({
+    const {data, isLoading, isError} = useQuery({
         queryFn: getUser,
         queryKey: ['user'],
         retry: 1,
         refetchOnWindowFocus: false
     })
 
-    console.log(data)
+    if(isLoading){
+        return <div className="flex justify-center items-center h-screen">
+            <div className="loader"></div>
+        </div>
+    }
+    if(isError){
+        return <Navigate to={'/auth/login'}/>
+    }
 
-    return (
+
+    if(data) return (
         <>
             <header className="bg-slate-800 py-5">
                 <div className="mx-auto max-w-5xl flex flex-col md:flex-row items-center md:justify-between">
@@ -25,7 +33,7 @@ export default function AppLayout() {
                     <div className="md:w-1/3 md:flex md:justify-end">
                         <button
                             className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
-                            onClick={() => {}}
+                            onClick={() => {localStorage.removeItem('USER_TOKEN')}}
                         >
                             Logout
                         </button>
@@ -44,7 +52,7 @@ export default function AppLayout() {
                             to={''}
                             target="_blank"
                             rel="noreferrer noopener"
-                        >My profile</Link>
+                        >Visit my profile: <span className="font-normal ms-1">{data.handle}</span></Link>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-10 mt-10">
