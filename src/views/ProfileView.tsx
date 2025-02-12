@@ -1,18 +1,29 @@
 import { useForm  } from "react-hook-form"
-import { useQuery } from "@tanstack/react-query";
-import { getUser, updateUser } from "../api/LinkForgeApi";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { updateUser } from "../api/LinkForgeApi";
 import { toast } from "sonner";
 import FormError from "../components/FormError";
-import { ProfileFormData } from "../types";
+import { ProfileFormData, User } from "../types";
 
 export default function ProfileView() {
 
-     const {data} = useQuery({
-        queryFn: getUser,
-        queryKey: ['user'],
-        retry: 1,
-        refetchOnWindowFocus: false
-     })
+    const queryClient = useQueryClient();
+    const data = queryClient.getQueryData<User>(['user']) ?? { 
+        //handle undefined return
+        name: '', 
+        email: '', 
+        handle: '', 
+        id: '', 
+        description: '' 
+    };
+
+    //  const {data} = useQuery({
+    //     queryFn: getUser,
+    //     queryKey: ['user'],
+    //     retry: 1,
+    //     refetchOnWindowFocus: false
+    //  })
+
 
     const {register, handleSubmit, formState:{errors}, reset } = useForm({
         defaultValues:{
@@ -21,20 +32,27 @@ export default function ProfileView() {
         }
     });
 
-    const onSubmit = async (profileFormData:ProfileFormData) => {
-        try {
-            const response = await updateUser(profileFormData);
 
+    const mutateUser = useMutation({
+        mutationFn: updateUser,
+        onError: (err) => {
+            toast.error(err.message);
+        },
+        onSuccess: (data) => {
             reset({
                 handle: '',
                 description: ''
-            });
+             });
 
-            toast.success(response.msg); //endpoint response
-            
-        } catch (error) {
-            console.log(error)
+            toast.success(data.msg); //endpoint response
+
+            //refresh react query data that it has in 'user' key bcause is old and there is new data there
+            queryClient.invalidateQueries({queryKey: ['user']});
         }
+    })
+
+    const onSubmit = (profileFormData:ProfileFormData) => {
+        mutateUser.mutate(profileFormData);
     }
 
     return (
