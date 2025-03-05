@@ -60,7 +60,7 @@ export default function AppLayout() {
                             <Outlet />
                         </div>
                         <div className="w-full md:w-96 bg-slate-800 px-5 py-10 space-y-6">
-
+                            <img src={data.image ? data.image : 'https://img.freepik.com/premium-vector/user-icons-includes-user-icons-people-icons-symbols-premiumquality-graphic-design-elements_981536-526.jpg'} alt="image" className="mx-auto max-w-[250px]" />
                         </div>
                     </div>
                 </main>
