@@ -1,6 +1,6 @@
 import api from "../lib/axios";
 import { isAxiosError } from "axios";
-import { ProfileFormData } from "../types";
+import { User } from "../types";
 
 export const getUser = async () => {
     try {
@@ -17,10 +17,8 @@ export const getUser = async () => {
 }
 
 
-export const updateUser = async (formData:ProfileFormData) => {
+export const updateUser = async (formData:User) => {
     try {
-        console.log("Datos enviados en updateUser:", formData);
-
         //this request send the token via interceptor in axios config
         const {data} = await api.patch(`/api/auth/user`, formData);
         return data;

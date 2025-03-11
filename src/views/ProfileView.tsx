@@ -72,7 +72,12 @@ export default function ProfileView() {
     
 
     const onSubmit = (profileFormData: ProfileFormData) => {
-        mutateUser.mutate(profileFormData);
+        const user:User = queryClient.getQueryData(['user'])!
+        //in case that description or handle change in addition to links, update with form values
+        user.description = profileFormData.description
+        user.handle = profileFormData.handle
+
+        mutateUser.mutate(user);
     };
     
 
