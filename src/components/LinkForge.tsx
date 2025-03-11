@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import NavigationTabs from "./NavigationTabs";
 import { User, SocialNetwork } from "../types";
 import Link from "./Link";
+import { useEffect } from "react";
 
 type LinkForgeProps = {
     data:User
@@ -13,6 +14,11 @@ export default function LinkForge({ data }:LinkForgeProps) {
 
     const [enabledLinks, setEnabledLinks] = useState<SocialNetwork[]>(JSON.parse(data.links).filter((item:SocialNetwork) => item.enabled))
     //console.log(enabledLinks)
+
+    //refresh visually when data changes(enable, disable or delete a link)
+    useEffect(() => {
+        setEnabledLinks(JSON.parse(data.links).filter((item:SocialNetwork) => item.enabled));
+    },[data])
 
   return (
     <>
