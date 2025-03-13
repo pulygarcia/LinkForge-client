@@ -5,7 +5,7 @@ import { User } from "../types";
 export const getUser = async () => {
     try {
         //this request send the token via interceptor in axios config
-        const {data} = await api.get(`/api/auth/user`)
+        const {data} = await api.get(`/api/user`)
 
         return data;
 
@@ -20,7 +20,7 @@ export const getUser = async () => {
 export const updateUser = async (formData:User) => {
     try {
         //this request send the token via interceptor in axios config
-        const {data} = await api.patch(`/api/auth/user`, formData);
+        const {data} = await api.patch(`/api/user`, formData);
         return data;
 
     } catch (error) {
@@ -36,7 +36,7 @@ export const uploadUserImage = async (file:File) => {
         let formData = new FormData();
         formData.append('file', file);
 
-        const { data } = await api.post('/api/auth/user/image', formData, {
+        const { data } = await api.post('/api/user/image', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // Especificar el tipo de contenido adecuado
             },
