@@ -41,14 +41,6 @@ export default function LinkForgeView() {
         const updatedLinks = linkForgeLinks.map(link => link.name === e.target.name ? {...link, url:e.target.value} : link); //{...link, url:e.target.value} => we take the object like it is, and only change the url
 
         setLinkForgeLinks(updatedLinks); //update the array in the state
-
-        //send the links to the user data
-        queryClient.setQueryData(['user'], (prevData:User) => {
-            return{
-                ...prevData,
-                links: JSON.stringify(updatedLinks)
-            };
-        });
     } 
 
     const handleEnableLink = (socialNetwork:string) => {
@@ -65,14 +57,68 @@ export default function LinkForgeView() {
             return link
         });
 
+        const links:SocialNetwork[] = JSON.parse(user.links);
+
         //console.log(updatedLinks)
 
         setLinkForgeLinks(updatedLinks);
-        //send the links to the user data
+
+        let updatedItems:SocialNetwork[] = [];
+
+        const selectedSocialNetwork = updatedLinks.find(link => link.name === socialNetwork);
+        if(selectedSocialNetwork?.enabled){
+            //avoid duplicates when disable and enable the same item
+            if(links.some(link => link.name === selectedSocialNetwork.name)){
+                updatedItems = links.map(link => {
+                    if(link.name === selectedSocialNetwork.name){
+                        return{
+                            ...link,
+                            enabled: true,
+                            id:links.filter(link => link.id > 0).length + 1
+                        }
+                    }else{
+                        return link
+                    }
+                })
+            }else{
+                //create id for the link
+                const newItem = {
+                    ...selectedSocialNetwork,
+                    id:links.filter(link => link.id > 0).length + 1
+                }
+    
+                updatedItems = [...links, newItem];
+            }
+        }else{
+            //disable and organize id's again
+            const indexToUpdate = links.findIndex(item => item.name === socialNetwork);
+
+            updatedItems = links.map(link => {
+                if(link.name === socialNetwork){
+                    return{
+                        ...link,
+                        id:0,
+                        enabled: false
+                    }
+                //reorder
+                }else if(link.id > indexToUpdate){
+                    return{
+                        ...link,
+                        id:link.id - 1
+                    }
+                }else{
+                    return link
+                }
+            })
+        }
+
+        console.log(updatedItems)
+
+        //send the links to the user data and save in Db
         queryClient.setQueryData(['user'], (prevData:User) => {
             return{
                 ...prevData,
-                links: JSON.stringify(updatedLinks)
+                links: JSON.stringify(updatedItems)
             };
         });
     } 
