@@ -101,7 +101,7 @@ export default function LinkForgeView() {
                         enabled: false
                     }
                 //reorder
-                }else if(link.id > indexToUpdate){
+                }else if(link.id > indexToUpdate && (indexToUpdate !== 0 && link.id === 1)){
                     return{
                         ...link,
                         id:link.id - 1
@@ -135,7 +135,7 @@ export default function LinkForgeView() {
 
             <button 
                 className="bg-blue-500 hover:bg-blue-600 p-3 rounded-md text-white font-bold w-full"
-                onClick={()=> mutate(user)}
+                onClick={()=> mutate(queryClient.getQueryData(['user'])!)}
             >
                 Save changes
             </button>

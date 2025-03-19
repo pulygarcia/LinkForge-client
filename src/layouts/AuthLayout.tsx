@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import { Toaster } from "sonner";
+import Logo from "../components/Logo";
 
 export default function App() {
   
@@ -7,7 +8,7 @@ export default function App() {
       <>
         <div className=" bg-slate-900 min-h-screen">
             <div className="max-w-lg pt-10 mx-auto px-5">
-                <img src="/logo.svg" alt="logo" />
+                <Logo />
 
                 <div className="py-10">
                     <Outlet /> {/*router view*/ }
