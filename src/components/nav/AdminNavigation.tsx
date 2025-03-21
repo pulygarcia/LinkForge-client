@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function HomeView() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const logOut = () => {
         if(confirm('Sure to log out?')){
             localStorage.removeItem('USER_TOKEN');
             navigate('/auth/login');
+            queryClient.invalidateQueries({queryKey:['user']})
         }
     }
 
