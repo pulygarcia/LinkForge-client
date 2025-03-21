@@ -13,7 +13,7 @@ export default function App() {
   const initialValues:RegisterForm = {
     name: '',
     email: '',
-    handle: location.state.handle || '',
+    handle: location?.state?.handle || '',
     password: '',
     password_confirmation: ''
   }
