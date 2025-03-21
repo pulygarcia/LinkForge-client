@@ -4,14 +4,16 @@ import FormError from '../components/FormError'
 import type {RegisterForm} from '../types/index'
 import api from "../lib/axios";
 import { toast } from "sonner";
+import { useLocation } from "react-router";
 
 export default function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const initialValues:RegisterForm = {
     name: '',
     email: '',
-    handle: '',
+    handle: location.state.handle || '',
     password: '',
     password_confirmation: ''
   }

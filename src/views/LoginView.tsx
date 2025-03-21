@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm  } from "react-hook-form"
 import FormError from '../components/FormError'
 import api from "../lib/axios";
@@ -10,6 +11,7 @@ export default function App() {
     email: '',
     password: '',
   }
+  const navigate = useNavigate();
 
   const {register, handleSubmit, formState:{errors}, reset } = useForm({defaultValues:initialValues});
 
@@ -21,6 +23,7 @@ export default function App() {
       //console.log(data);
       reset();
       toast.success(data.msg); //endpoint response
+      navigate('/admin')
 
     } catch (error:any) {
       toast.error(error.response.data.msg);
